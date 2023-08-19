@@ -1,0 +1,36 @@
+# `black` does not work with setup.cfg
+# as seen here: https://blog.pilosus.org/posts/2019/12/26/python-third-party-tools-configuration/
+
+[tool.black]
+exclude = '(\.git|\.mypy_cache|\.venv)'
+include = '\.pyi?$'
+line-length = 132
+target-version = ['py310']
+
+[tool.coverage.report]
+show_missing = true
+omit = ["*/__init__.py",
+    ".mypy_cache",
+    ".pytest_cache"
+]
+
+[tool.coverage.xml]
+output = "coverage-reports/cobertura-coverage.xml"
+
+[tool.coverage.run]
+source = ["nc-data-ingestion"]
+branch = true
+relative_files = true
+omit = ["*/__init__.py",
+    ".mypy_cache",
+    "tests/",
+    "notebooks/",
+    "docs/",
+    ".git"
+]
+
+
+[tool.mypy]
+ignore_missing_imports = true
+namespace_packages = true
+follow_imports = "skip" # used for https://github.com/python/mypy/issues/13627 since we cant update mypy

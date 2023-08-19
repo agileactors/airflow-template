@@ -1,0 +1,35 @@
+target
+
+
+# python
+*.pyc
+*__pycache__
+*.egg-info
+build
+dist
+MANIFEST
+.idea
+.vscode
+logs
+tests/logs/
+coverage-reports/
+htmlcov/
+
+# python test
+.coverage*
+.mypy_cache
+.pytest_cache/
+.tox
+tests/resources/tmp_configs/
+
+# venvs
+.venv/
+env/
+venv/
+.env
+
+dags/version.info
+
+# mutation
+mutation.sqlite
+report.html

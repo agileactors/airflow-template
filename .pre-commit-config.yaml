@@ -1,0 +1,44 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+
+repos:
+-   repo: https://github.com/PyCQA/isort
+    rev: '5.12.0'
+    hooks:
+    -   id: isort
+        entry: isort --diff --check dags tests
+        pass_filenames: false
+        language_version: python3.10
+        always_run: true
+
+-   repo: https://github.com/ambv/black
+    rev: '23.3.0'
+    hooks:
+    - id: black
+      name: black
+      entry: black --diff --check --color dags tests
+      pass_filenames: false
+      language_version: python3.10
+      always_run: true
+
+-   repo: https://github.com/pycqa/flake8
+    rev: '6.0.0'
+    hooks:
+    -   id: flake8
+        entry: flake8 dags tests
+        pass_filenames: false
+        language_version: python3.10
+        always_run: true
+
+
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: 'v1.2.0'
+    hooks:
+    -   id: mypy
+        # when mypy is run from the pre-commit hook an error occurs due to missing stubs so we need these flags
+        entry: mypy --install-types --non-interactive dags tests
+        pass_filenames: false
+        language_version: python3.10
+        always_run: true
+
+

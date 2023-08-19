@@ -1,0 +1,22 @@
+restart_failed_dags_test_dag:
+  concurrency: 1
+  catchup: false
+  dagrun_timeout_sec: 2000
+  default_args:
+    owner: Data Squads
+    retries: 0
+    retry_delay_sec: 300
+    start_date: 2023-07-17
+  description: "Restart all failed dags."
+  is_paused_upon_creation: true
+  max_active_runs: 1
+  schedule: '@daily'
+
+  tags:
+  - dags
+  - restart
+  - PythonOperator
+  tasks:
+    restart_failed_dags_test_task:
+      operator: airflow.operators.python.PythonOperator
+      python_callable: operators.restart_failed_dags.restart_failed_dags

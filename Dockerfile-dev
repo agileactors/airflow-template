@@ -1,0 +1,37 @@
+FROM apache/airflow:2.5.1-python3.10
+USER root
+
+# Add Microsoft GPG key for package verification
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+
+# Download appropriate package for the OS version
+# Choose only ONE of the following, corresponding to your OS version
+
+# Debian 11
+RUN curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list
+
+# Update package repository
+RUN apt-get update
+
+# Install Microsoft ODBC Driver for SQL Server (version 18)
+RUN ACCEPT_EULA=Y apt-get install msodbcsql18
+
+# Copy requirements.txt file into the image root directory
+COPY requirements.txt /
+
+# Update package repository and install additional tools
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+         vim \
+  && apt-get install nano \
+  && apt-get autoremove -yqq --purge \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+# Switch back to the 'airflow' user
+USER airflow
+
+# Install Python packages listed in requirements.txt using pip
+RUN pip install --no-cache-dir -r /requirements.txt
+
+
