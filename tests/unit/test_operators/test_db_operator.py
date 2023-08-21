@@ -5,7 +5,6 @@ import pytest
 from airflow.models import Pool
 
 from dags.operators.db_operator import DbOperator, PgOperator
-from dags.operators.exceptions import OperatorException
 
 context = {
     "data_interval_start": pendulum.datetime(2001, 5, 21, 12, 0, 0),
@@ -127,7 +126,11 @@ def test_get_init_query_pg_with_chunk(mock_get_pools: MagicMock, mock_operationa
         chunk_size_kb=1000,
     )
 
-    expected = "SELECT test_db_name.test_schema_name.test_table_name.* FROM test_db_name.test_schema_name.test_table_name ORDER BY test_db_name.test_schema_name.test_table_name.id LIMIT {chunk_size} OFFSET {offset}"
+    expected = (
+        "SELECT test_db_name.test_schema_name.test_table_name.* "
+        "FROM test_db_name.test_schema_name.test_table_name "
+        "ORDER BY test_db_name.test_schema_name.test_table_name.id LIMIT {chunk_size} OFFSET {offset}"
+    )
 
     actual = operator.build_query()
 

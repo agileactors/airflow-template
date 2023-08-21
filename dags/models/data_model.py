@@ -5,10 +5,9 @@ These classes help to abstract away the details of the data sources
 and destinations, and they contain useful methods to interact with them.
 
 """
-import logging
+
 from typing import List
 
-import polars as pl
 import sqlalchemy
 from airflow.hooks.base import BaseHook
 

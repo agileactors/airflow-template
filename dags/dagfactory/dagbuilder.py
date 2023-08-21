@@ -8,7 +8,7 @@ from datetime import timedelta
 from typing import Any, Callable, Dict, List, Union
 
 from airflow import configuration
-from airflow.models import DAG, BaseOperator, Variable
+from airflow.models import DAG, BaseOperator
 from airflow.utils.module_loading import import_string
 from airflow.utils.task_group import TaskGroup
 from dagfactory import utils

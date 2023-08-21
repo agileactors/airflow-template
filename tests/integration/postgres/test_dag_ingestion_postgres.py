@@ -1,7 +1,3 @@
-import allure
-import polars as pl
-
-
 def test_ingestion_happens_successfully_pg_server(setup_and_teardown_fixture, airflow_api_utils_fixture):
     dag_under_test_id = "successful_ingestion_test_pg_dag"
 

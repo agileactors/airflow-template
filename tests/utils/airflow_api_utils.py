@@ -2,7 +2,6 @@ import time
 import uuid
 
 import airflow_client
-import allure
 from airflow_client.client.api import dag_api, dag_run_api, import_error_api, task_instance_api
 from airflow_client.client.model.dag import DAG
 from airflow_client.client.model.dag_run import DAGRun
