@@ -11,7 +11,6 @@ from airflow_client.client.model.dag_run_collection import DAGRunCollection
 from tests.configuration import config
 
 
-
 class Colors:
     BLUE = "\033[94m"
     GREEN = "\033[92m"
@@ -55,7 +54,6 @@ class AirflowApiUtils:
         self.wait_dag(dag_id, dag_run_id)
 
     def wait_dag(self, dag_id: str, dag_run_id: str):
-
         print(f"{Colors.BLUE}Status of a DAG run{Colors.DEFAULT}")
         try:
             is_not_finished = True

@@ -53,7 +53,7 @@ def test_get_dag_params(tmpdir, default_config_fixture):
             "start_date": DateTime(2010, 1, 1, 0, 0, 0, tzinfo=Timezone("UTC")),
             "end_date": DateTime(2020, 1, 1, 0, 0, 0, tzinfo=Timezone("UTC")),
             "retry_delay": timedelta(seconds=200),
-            "sla": timedelta(seconds=12)
+            "sla": timedelta(seconds=12),
         },
         "template_searchpath": template_path,
         "dagrun_timeout": timedelta(seconds=10),
@@ -178,10 +178,6 @@ def test_make_task_valid():
     assert isinstance(actual, BashOperator)
 
 
-
-
-
-
 def test_make_task_python_operator():
     """Test that valid python operator is created."""
 
@@ -212,14 +208,6 @@ def test_make_task_python_operator_bad(caplog):
         DagBuilder.make_task(operator, task_params)
 
     assert "PythonOperator requires python_callable" in caplog.text
-
-
-
-
-
-
-
-
 
 
 def test_make_task_bad_operator(caplog):

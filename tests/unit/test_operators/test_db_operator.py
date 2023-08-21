@@ -4,7 +4,7 @@ import pendulum
 import pytest
 from airflow.models import Pool
 
-from dags.operators.db_operator import PgOperator, DbOperator
+from dags.operators.db_operator import DbOperator, PgOperator
 from dags.operators.exceptions import OperatorException
 
 context = {
@@ -15,9 +15,7 @@ context = {
 
 @patch("sqlalchemy.create_engine")
 @patch("airflow.models.Pool.get_pools")
-def test_pg_operator_execute(
-        mock_get_pools: MagicMock, mock_creator: MagicMock, mock_operational_db_connection
-):
+def test_pg_operator_execute(mock_get_pools: MagicMock, mock_creator: MagicMock, mock_operational_db_connection):
     """Test that the operator calls the correct methods"""
 
     mock_get_pools.return_value = [Pool(pool="test_sql_conn")]
@@ -40,8 +38,9 @@ def test_pg_operator_execute(
 @patch("models.data_model.Database")
 @patch("airflow.models.Pool.get_pools")
 @patch("sqlalchemy.create_engine")
-def test_pg_to_s3_operator_execute_error_on_pgsql(mock_creator: MagicMock, mock_get_pools: MagicMock, mock_mssql: MagicMock,
-                                                  mock_operational_db_connection):
+def test_pg_to_s3_operator_execute_error_on_pgsql(
+    mock_creator: MagicMock, mock_get_pools: MagicMock, mock_mssql: MagicMock, mock_operational_db_connection
+):
     """Test that the operator raises an exception if there is an error on the sql side"""
 
     mock_get_pools.return_value = [Pool(pool="test_sql_conn")]
@@ -105,10 +104,7 @@ def test_build_query_pg(mock_get_pools: MagicMock, mock_operational_db_connectio
         table_name="People",
     )
 
-    expected = (
-        "SELECT Montero.dbo.People.* "
-        "FROM Montero.dbo.People "
-    )
+    expected = "SELECT Montero.dbo.People.* " "FROM Montero.dbo.People "
 
     actual = operator.build_query()
 
@@ -131,9 +127,7 @@ def test_get_init_query_pg_with_chunk(mock_get_pools: MagicMock, mock_operationa
         chunk_size_kb=1000,
     )
 
-    expected = (
-        "SELECT test_db_name.test_schema_name.test_table_name.* FROM test_db_name.test_schema_name.test_table_name ORDER BY test_db_name.test_schema_name.test_table_name.id LIMIT {chunk_size} OFFSET {offset}"
-    )
+    expected = "SELECT test_db_name.test_schema_name.test_table_name.* FROM test_db_name.test_schema_name.test_table_name ORDER BY test_db_name.test_schema_name.test_table_name.id LIMIT {chunk_size} OFFSET {offset}"
 
     actual = operator.build_query()
 
@@ -154,10 +148,7 @@ def test_build_query_no_db_no_schema_pg(mock_get_pools: MagicMock, mock_operatio
         table_name="test_table_name",
     )
 
-    expected = (
-        "SELECT test_table_name.* "
-        "FROM test_table_name "
-    )
+    expected = "SELECT test_table_name.* " "FROM test_table_name "
 
     actual = operator.build_query()
 
@@ -178,10 +169,7 @@ def test_build_query_no_db_pg(mock_get_pools: MagicMock, mock_operational_db_con
         table_name="test_table_name",
     )
 
-    expected = (
-        "SELECT test_schema_name.test_table_name.* "
-        "FROM test_schema_name.test_table_name "
-    )
+    expected = "SELECT test_schema_name.test_table_name.* " "FROM test_schema_name.test_table_name "
 
     actual = operator.build_query()
 
@@ -220,8 +208,6 @@ def test_db_to_s3_operator_no_schema(mock_get_pools: MagicMock, mock_operational
         )
 
 
-
-
 @patch("models.data_model.Database")
 @patch("airflow.models.Pool.get_pools")
 def test_get_table_size_pg(mock_get_pools: MagicMock, mock_mssql: MagicMock, mock_operational_db_connection):
@@ -247,13 +233,3 @@ def test_get_table_size_pg(mock_get_pools: MagicMock, mock_mssql: MagicMock, moc
     actual = operator.get_table_size()
 
     assert expected == actual
-
-
-
-
-
-
-
-
-
-

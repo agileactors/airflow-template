@@ -72,7 +72,6 @@ class DagBuilder:
             dag_params["default_args"]["sla"] = timedelta(seconds=dag_params["default_args"]["sla_secs"])
             del dag_params["default_args"]["sla_secs"]
 
-
         # Set callable functions in case of success, failure, etc.
         utils.set_callable(dag_params["default_args"], "on_success_callback")
         utils.set_callable(dag_params["default_args"], "on_failure_callback")
