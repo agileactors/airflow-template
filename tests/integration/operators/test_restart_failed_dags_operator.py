@@ -1,10 +1,10 @@
-def test_restart_failed_dags(airflow_api_utils_fixture):
+def test_restart_failed_dags(setup_and_teardown_fixture, airflow_api_utils_fixture):
     """
     Test that all failed DAGs are restarted.
     """
 
     # run bad dag
-    failed_dag_under_test_id = "failed_test_api_dag"
+    failed_dag_under_test_id = "failed_test_dag"
     airflow_api_utils_fixture.run_dag(failed_dag_under_test_id)
 
     # run good dag

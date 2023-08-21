@@ -63,15 +63,15 @@ def test_get_default_config():
 def test_build_dags(mock_get_pools: MagicMock, mock_operational_db_connection):
     """Test build_dags method"""
 
-    mock_get_pools.return_value = [Pool(pool="bookings-read-replica")]
+    mock_get_pools.return_value = [Pool(pool="test_pool")]
     # Create temporary file and write mock YAML data to it
     with tempfile.NamedTemporaryFile(mode="w") as f:
-        mock_data = _create_mock_dict_with_dag_conf(dag_name="montero_people_dag")
+        mock_data = _create_mock_dict_with_dag_conf(dag_name="test_dag")
         yaml.dump(mock_data, f)
         dag_factory = DagFactory(f.name)
         actual_data = dag_factory.build_dags()
 
-        assert isinstance(actual_data["montero_people_dag"], DAG)
+        assert isinstance(actual_data["test_dag"], DAG)
 
 
 def test_build_dags_exception():
@@ -82,7 +82,7 @@ def test_build_dags_exception():
     # Create temporary file and write mock YAML data to it
     with tempfile.NamedTemporaryFile(mode="w") as f:
         mock_data = {
-            "montero_people_dag": {
+            "test_dag": {
                 "default_args": {"owner": "airflow", "start_date": "2022-05-03", "retries": 1, "retry_delay_sec": 300},
                 "schedule": "@once",
                 "concurrency": 1,
@@ -90,14 +90,11 @@ def test_build_dags_exception():
                 "dagrun_timeout_sec": 120,
                 "default_view": "grid",
                 "orientation": "LR",
-                "description": "Dag representing flow from Montero.People to S3 bucket.",
+                "description": "Dag representing flow from test_schema.test_table",
                 "tasks": {
                     "montero_people_to_s3": {
                         "operator": "ERROR",
-                        "db_conn_id": "bookings-read-replica",
-                        "s3_conn_id": "s3-data-team-workspace",
-                        "s3_bucket": "data-team-workspace",
-                        "s3_key": "airflows/montero_people.parquet",
+                        "db_conn_id": "test_db_conn_id",
                         "sql_query": "SELECT * FROM Montero.dbo.People WITH (NOLOCK)",
                     }
                 },
@@ -133,16 +130,16 @@ def test_register_dags(globals_fixture):
 def test_generate_dags(mock_get_pools: MagicMock, globals_fixture, mock_operational_db_connection):
     """Test generate_dags method"""
 
-    mock_get_pools.return_value = [Pool(pool="bookings-read-replica")]
+    mock_get_pools.return_value = [Pool(pool="test_pool")]
 
     # Create temporary file and write mock YAML data to it
     with tempfile.NamedTemporaryFile(mode="w") as f:
-        mock_data = _create_mock_dict_with_dag_conf(dag_name="montero_people_dag")
+        mock_data = _create_mock_dict_with_dag_conf(dag_name="test_dag")
         yaml.dump(mock_data, f)
         dag_factory = DagFactory(f.name)
         dag_factory.generate_dags(globals=globals_fixture)
 
-        assert "montero_people_dag" in globals_fixture
+        assert "test_dag" in globals_fixture
 
 
 def test_generate_dags_exception(globals_fixture):
@@ -163,7 +160,7 @@ def test_generate_dags_exception(globals_fixture):
 def test_clean_dags(mock_get_pools: MagicMock, globals_fixture, mock_operational_db_connection):
     """Test clean_dags method"""
 
-    mock_get_pools.return_value = [Pool(pool="bookings-read-replica")]
+    mock_get_pools.return_value = [Pool(pool="test_pool")]
 
     # Create temporary file and write mock YAML data to it
     with tempfile.NamedTemporaryFile(mode="w") as f:
@@ -174,7 +171,7 @@ def test_clean_dags(mock_get_pools: MagicMock, globals_fixture, mock_operational
 
     # Create temporary file and write mock YAML data to it
     with tempfile.NamedTemporaryFile(mode="w") as f:
-        mock_data = _create_mock_dict_with_dag_conf(dag_name="montero_people_dag")
+        mock_data = _create_mock_dict_with_dag_conf(dag_name="test_dag")
         yaml.dump(mock_data, f)
         dag_factory = DagFactory(f.name)
         dag_factory.generate_dags(globals=globals_fixture)
@@ -182,36 +179,36 @@ def test_clean_dags(mock_get_pools: MagicMock, globals_fixture, mock_operational
         dag_factory.clean_dags(globals=globals_fixture)
 
         assert "TEST" not in globals_fixture
-        assert "montero_people_dag" in globals_fixture
+        assert "test_dag" in globals_fixture
 
 
 @patch("airflow.models.Pool.get_pools")
 def test_clean_dags_for_non_factory_generated_dag(mock_get_pools: MagicMock, globals_fixture, mock_operational_db_connection):
     """Test clean_dags method when there is a DAG in globals without the is_dagfactory_auto_generated attribute"""
 
-    mock_get_pools.return_value = [Pool(pool="bookings-read-replica")]
+    mock_get_pools.return_value = [Pool(pool="test_pool")]
     dag_not_generated_by_factory = DAG("TEST")
     globals_fixture["NOT_GENERATED_BY_FACTORY"] = dag_not_generated_by_factory
 
     # Create temporary file and write mock YAML data to it
     with tempfile.NamedTemporaryFile(mode="w") as f:
-        mock_data = _create_mock_dict_with_dag_conf(dag_name="montero_people_dag")
+        mock_data = _create_mock_dict_with_dag_conf(dag_name="test_dag")
         yaml.dump(mock_data, f)
         dag_factory = DagFactory(f.name)
         dag_factory.generate_dags(globals=globals_fixture)
         dag_factory.clean_dags(globals=globals_fixture)
 
     assert "NOT_GENERATED_BY_FACTORY" in globals_fixture
-    assert "montero_people_dag" in globals_fixture
+    assert "test_dag" in globals_fixture
 
 
 @patch("airflow.models.Pool.get_pools")
 def test_load_yaml_dags(mock_get_pools: MagicMock, globals_fixture, tmpdir, mock_operational_db_connection):
-    mock_get_pools.return_value = [Pool(pool="bookings-read-replica")]
+    mock_get_pools.return_value = [Pool(pool="test_pool")]
 
     """Test load_yaml_dags method"""
     with tempfile.NamedTemporaryFile(mode="w", dir=tmpdir, suffix=".yaml") as f:
-        mock_data = _create_mock_dict_with_dag_conf(dag_name="montero_people_dag")
+        mock_data = _create_mock_dict_with_dag_conf(dag_name="test_dag")
         yaml.dump(mock_data, f)
 
         load_yaml_dags(
@@ -219,7 +216,7 @@ def test_load_yaml_dags(mock_get_pools: MagicMock, globals_fixture, tmpdir, mock
             dags_folder=tmpdir,
         )
 
-        assert "montero_people_dag" in globals_fixture
+        assert "test_dag" in globals_fixture
 
 
 def _create_mock_dict_with_dag_conf(dag_name: str | None = None) -> dict:
@@ -237,17 +234,14 @@ def _create_mock_dict_with_dag_conf(dag_name: str | None = None) -> dict:
             "dagrun_timeout_sec": 120,
             "default_view": "grid",
             "orientation": "LR",
-            "description": "Dag representing flow from Montero.People to S3 bucket.",
+            "description": "Dag representing flow from test_schema.test_table",
             "tasks": {
-                "montero_people_to_s3": {
-                    "operator": "operators.db_to_s3_operator.SqlServerToS3Operator",
-                    "db_conn_id": "bookings-read-replica",
-                    "s3_conn_id": "s3-data-team-workspace",
-                    "s3_bucket": "data-team-workspace",
-                    "s3_key": "airflows/montero_people.parquet",
-                    "db_name": "Montero",
-                    "schema_name": "dbo",
-                    "table_name": "People",
+                "montero_people": {
+                    "operator": "operators.db_operator.PgOperator",
+                    "db_conn_id": "test_db_conn_id",
+                    "db_name": "test_db_name",
+                    "schema_name": "test_schema",
+                    "table_name": "test_table",
                 }
             },
         }

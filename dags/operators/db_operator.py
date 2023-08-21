@@ -3,16 +3,13 @@ Holds operators whose main function is to move data from a database to S3.
 """
 
 import logging
-import re
-from typing import Dict, List
 
-import psycopg2
 from airflow.models import BaseOperator, Pool
 from models import data_model
 from operators.exceptions import OperatorException
 
 
-class DbToS3Operator(BaseOperator):
+class DbOperator(BaseOperator):
     """
     Custom operator to read data from DB and log the result.
 
@@ -156,8 +153,8 @@ class DbToS3Operator(BaseOperator):
                 logging.info(f"Data read successfully : {df}")
 
             except Exception as err:
-                logging.error("Error while trying to read data from SQL Server: %s", str(err))
-                raise OperatorException("Error while trying to read data from SQL Server") from err
+                logging.error("Error while trying to read data from Database: %s", str(err))
+                raise OperatorException("Error while trying to read data from Database") from err
 
             # If no data was read, break
             if len(df) == 0:
@@ -169,7 +166,7 @@ class DbToS3Operator(BaseOperator):
                 break
 
 
-class PgToS3Operator(DbToS3Operator):
+class PgOperator(DbOperator):
     """
     Operator that reads data from Postgres and writes it to S3.
     The operator will read data from the query that came from _get_init_query()

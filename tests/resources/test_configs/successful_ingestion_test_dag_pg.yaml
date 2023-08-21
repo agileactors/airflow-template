@@ -18,7 +18,7 @@ successful_ingestion_test_pg_dag:
     - CustomPythonOperator
   tasks:
     successful_ingestion_test_pg_dag_task:
-      operator: operators.db_to_s3_operator.PgToS3Operator
+      operator: operators.db_operator.PgOperator
       db_conn_id: pg_external_db
       db_name: postgres
       schema_name: test_schema

@@ -203,6 +203,7 @@ More information can be found here: https://newcross.atlassian.net/wiki/spaces/D
 ├── mutation_config.toml        # File of mutation testing configurations
 ├── pyproject.toml              # File of python project configurations
 ├── requirements.txt            # File for any Python packages prod 
+├── pytest.ini                  # File to add test paths
 └── setup.cfg                   # File for set up
 
 ```

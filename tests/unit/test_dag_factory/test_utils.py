@@ -241,7 +241,7 @@ def test_set_callable():
             "start_date": datetime(2022, 5, 3),
             "retries": 1,
             "retry_delay_sec": 300,
-            "on_success_callback": "operators.db_to_s3_operator.SqlServerToS3Operator",
+            "on_success_callback": "operators.db_operator.PgOperator",
         },
     }
     set_callable(dag_params["default_args"], "on_success_callback")

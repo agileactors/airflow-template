@@ -50,17 +50,17 @@ class DagBuilder:
 
         dag_params["dag_id"] = self.dag_name
 
-        # Convert from 'dagrun_timeout_sec: int' to 'dagrun_timeout: timedelta'
-        if utils.check_dict_key(dag_params, "dagrun_timeout_sec"):
-            dag_params["dagrun_timeout"] = timedelta(seconds=dag_params["dagrun_timeout_sec"])
-            del dag_params["dagrun_timeout_sec"]
-
         # Convert from 'end_date: Union[str, datetime, date]' to
         if utils.check_dict_key(dag_params["default_args"], "end_date"):
             dag_params["default_args"]["end_date"] = utils.get_datetime(
                 date_value=dag_params["default_args"]["end_date"],
                 timezone=dag_params["default_args"].get("timezone", "UTC"),
             )
+
+        # Convert from 'dagrun_timeout_sec: int' to 'dagrun_timeout: timedelta'
+        if utils.check_dict_key(dag_params, "dagrun_timeout_sec"):
+            dag_params["dagrun_timeout"] = timedelta(seconds=dag_params["dagrun_timeout_sec"])
+            del dag_params["dagrun_timeout_sec"]
 
         # Set 'retry_delay' from 'retry_delay_sec'
         if utils.check_dict_key(dag_params["default_args"], "retry_delay_sec"):
@@ -72,13 +72,6 @@ class DagBuilder:
             dag_params["default_args"]["sla"] = timedelta(seconds=dag_params["default_args"]["sla_secs"])
             del dag_params["default_args"]["sla_secs"]
 
-        # For non test DAGs produce slack alerts in case of failure
-        if "_test_" not in self.dag_name:
-            if utils.check_dict_key(dag_params["default_args"], "on_failure_callback"):
-                logging.info("on_failure_callback already set in default_args, skipping setting slack alert")
-            else:
-                logging.info("Setting slack alert in case of failure.")
-                dag_params["default_args"]["on_failure_callback"] = "callbacks.slack_alerts.slack_alert_failure"
 
         # Set callable functions in case of success, failure, etc.
         utils.set_callable(dag_params["default_args"], "on_success_callback")
