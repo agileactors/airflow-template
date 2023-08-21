@@ -7,8 +7,7 @@
     2. [Integration Testing](#integration-testing)
     3. [Manual Testing](#manual-testing)
 3. [CI/CD](#cicd)
-    1. [CI](#ci)[requirements-dev.txt](requirements-dev.txt)
-    2. [CD](#cd)
+    1. [CI](#ci)
 4. [Code Structure](#code-structure)
 
 
@@ -157,26 +156,10 @@ The CI/CD pipeline is configured in the [GitHub actions](.github/workflows) file
 ### CI
 The CI pipeline is configured in the [GitHub actions](.github/workflows/ci.yml) file. 
 - It is triggered on every push to the main branch and in every pull request(pr).
-- It runs the versioning, tagging the code, unit testing and the integration testing.
+- It runs  unit testing and the integration testing.
 - It also runs the pre-commit hooks to ensure that the code is formatted correctly and that the tests pass before pushing to the main branch.
-- It also runs the SonarCloud analysis to check the code quality and the code coverage.
-  - The SonarCloud analysis is configured in the [sonar-project.properties](sonar-project.properties) file.
-  - You can see the SonarCloud quality gate for NewCross in the https://sonarcloud.io/organizations/newcross-tech/quality_gates/show/9
+- Fails if any of the tests fail.
 
-
-Part of the CI pipeline is the mutation testing workflow which is configured in the [GitHub actions](.github/workflows/mutation-testing.yml) file.
-- It is triggered on every push to the main branch and in every pull request(pr).
-- It runs the mutation testing and generates a report.
-- Fails if the survival rate is more than 80%.
-
-### CD
-The CD pipeline is configured in the [GitHub actions](.github/workflows/deploy-to-env.yml) file.
-- It is triggered manually on every push to the main branch and runs only with tags.
-- You need to choose the tag you want to deploy and the environment you want to deploy to.
-- Deploys the code to the environment that you have chose with rsync to the dag file.
-  - For now, we don't have a PRODUCTION environment so the only option is to deploy to the DEVELOPMENT environment.
-
-More information can be found here: https://newcross.atlassian.net/wiki/spaces/DET/pages/3857285133/Data+Ingestion+CI+CD+Github+Pipeline
 
 ## Code Structure
 ```
