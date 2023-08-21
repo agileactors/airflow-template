@@ -1,4 +1,4 @@
-.PHONY: data-load-sync install-dev start-db stop-db devserver prodserver clean check format tests
+.PHONY: install-dev start-db stop-db devserver prodserver clean check format tests
 
 ## ATTENTION! activate virtual environment before running!
 
@@ -9,7 +9,6 @@ install-dev:
 	pre-commit install
 
 ## clear all caches
-
 clear:
 	rm -rf logs
 	rm -rf localstack
@@ -21,8 +20,8 @@ clear:
 	rm -rf coverage-reports
 	rm -rf htmlcov
 	rm -rf tests/resources/tmp_configs
-## uninstall all dev packages
 
+## uninstall all dev packages
 uninstall-dev:
 	pip freeze | xargs pip uninstall -y
 
