@@ -123,6 +123,10 @@ class DbOperator(BaseOperator):
             return None
 
     def execute(self, context):
+        """
+        Executes the operator.
+        :param context: Airflow context
+        """
         # build query
         query = self.build_query()
 

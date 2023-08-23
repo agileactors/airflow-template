@@ -18,6 +18,9 @@ class Colors:
 
 
 class AirflowApiUtils:
+    """
+    This class is used to interact with Airflow API.
+    """
     def __init__(self):
         self.configuration = airflow_client.client.Configuration(
             host=config["AIRFLOW_API_URL"], username=config["AIRFLOW_USERNAME"], password=config["AIRFLOW_PASSWORD"]
@@ -29,6 +32,11 @@ class AirflowApiUtils:
         self.dag_import_error_api_instance = import_error_api.ImportErrorApi(self.api_client)
 
     def run_dag(self, dag_id: str):
+        """
+        This method runs a DAG and waits for it to finish.
+        :param dag_id:
+        :return:
+        """
         print(f"{Colors.BLUE}Unpause a DAG{Colors.DEFAULT}")
         try:
             dag = DAG(is_paused=False)
@@ -53,6 +61,12 @@ class AirflowApiUtils:
         self.wait_dag(dag_id, dag_run_id)
 
     def wait_dag(self, dag_id: str, dag_run_id: str):
+        """
+        This method waits for a DAG to finish.
+        :param dag_id:
+        :param dag_run_id:
+        :return:
+        """
         print(f"{Colors.BLUE}Status of a DAG run{Colors.DEFAULT}")
         try:
             is_not_finished = True
@@ -70,9 +84,18 @@ class AirflowApiUtils:
             print(f"{Colors.GREEN}Getting DAG Run successful{Colors.DEFAULT}")
 
     def get_dag_info(self, dag_id: str):
+        """
+        This method gets a DAG info.
+        :param dag_id:
+        :return:
+        """
         return self.dag_api_instance.get_dag(dag_id)
 
     def list_dag_ids(self):
+        """
+        This method lists all DAG ids.
+        :return:  list of dag_ids
+        """
         try:
             dags_collection = self.dag_api_instance.get_dags()["dags"]
             dag_ids_collection = [dag.dag_id for dag in dags_collection]
@@ -83,6 +106,11 @@ class AirflowApiUtils:
         return dag_ids_collection
 
     def list_dag_runs(self, dag_id: str) -> DAGRunCollection:
+        """
+        This method lists all DAG runs for a given DAG id.
+        :param dag_id:
+        :return: list of dag_runs
+        """
         try:
             dag_run_collection = self.dag_run_api_instance.get_dag_runs(dag_id)
         except airflow_client.client.exceptions.OpenApiException as e:
@@ -91,9 +119,20 @@ class AirflowApiUtils:
         return dag_run_collection
 
     def list_dag_run_ids(self, dag_id: str):
+        """
+        This method lists all DAG run ids for a given DAG id.
+        :param dag_id:
+        :return: list of dag_run_ids
+        """
         return [dag_run.dag_run_id for dag_run in self.list_dag_runs(dag_id).dag_runs]
 
     def get_dag_run_logs(self, dag_id: str, task_id: str):
+        """
+        This method gets logs for a given DAG id and task id.
+        :param dag_id:
+        :param task_id:
+        :return: list of logs
+        """
         dag_run_ids = self.list_dag_run_ids(dag_id)
         dag_run_logs = []
 
@@ -104,6 +143,12 @@ class AirflowApiUtils:
         return dag_run_logs
 
     def delete_dag_run(self, dag_id: str, dag_run_id: str):
+        """
+        This method deletes a DAG run for a given DAG id and DAG run id.
+        :param dag_id:
+        :param dag_run_id:
+        :return:
+        """
         try:
             _ = self.dag_run_api_instance.delete_dag_run(dag_id, dag_run_id)
         except airflow_client.client.exceptions.OpenApiException as e:
@@ -111,12 +156,25 @@ class AirflowApiUtils:
             raise e
 
     def get_import_errors(self):
+        """
+        This method gets import errors.
+        :return:
+        """
         return self.dag_import_error_api_instance.get_import_errors()
 
     def delete_dag(self, dag_id):
+        """
+        This method deletes a DAG for a given DAG id.
+        :param dag_id:
+        :return:
+        """
         self.dag_api_instance.delete_dag(dag_id)
 
     def delete_all_dag_runs(self):
+        """
+        This method deletes all DAG runs.
+        :return:
+        """
         dag_ids = self.list_dag_ids()
 
         for dag_id in dag_ids:

@@ -8,6 +8,7 @@ from operators.exceptions import OperatorException
 def restart_failed_dags(**context):
     """
     Restart all failed DAGs.
+    :param context: Airflow context
     """
     try:
         # Get all the failed DAG runs

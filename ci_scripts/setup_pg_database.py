@@ -1,7 +1,9 @@
+from dotenv import dotenv_values
 from sqlalchemy import create_engine
 
+config = dotenv_values(".env.integrationtesting")
 
-engine = create_engine(url="postgresql+psycopg2://postgres:postgres@localhost:5433/postgres")
+engine = create_engine(url=config["EXTERNAL_PG_DB_URL"])
 
 
 sql_script_path = "tests/resources/sql_scripts/setup_pg_db.sql"

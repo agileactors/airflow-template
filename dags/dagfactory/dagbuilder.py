@@ -186,7 +186,10 @@ class DagBuilder:
     @staticmethod
     def make_task_groups(task_groups: Dict[str, Any], dag: DAG) -> Dict[str, TaskGroup]:  # pylint: disable=unused-argument
         """
-        TODO
+        Creates task groups from task group config.
+        :arg task_groups: Dictionary containing task group config
+        :arg dag: DAG object
+        :return: Dictionary containing task group instances
         """
         task_groups_dict: Dict[str, TaskGroup] = {}
 
