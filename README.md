@@ -183,7 +183,6 @@ The CI pipeline is configured in the [GitHub actions](.github/workflows/ci.yml) 
 ├── docker-compose-test.yaml    # File for set up Testing environment 
 ├── Dockerfile-test             # File for AirFlow/python Docker image for testing
 ├── Makefile                    # File for any Python packages 
-├── mutation_config.toml        # File of mutation testing configurations
 ├── pyproject.toml              # File of python project configurations
 ├── requirements.txt            # File for any Python packages prod 
 ├── pytest.ini                  # File to add test paths
